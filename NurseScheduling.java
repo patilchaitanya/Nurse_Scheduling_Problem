@@ -140,5 +140,57 @@ solver.getParameters().setLinearizationLevel(0);
 // Tell the solver to enumerate all solutions.
 solver.getParameters().setEnumerateAllSolutions(true);
 
+final int solutionLimit = 5;
+class VarArraySolutionPrinterWithLimit extends CpSolverSolutionCallback {
+  public VarArraySolutionPrinterWithLimit(
+      int[] allNurses, int[] allDays, int[] allShifts, Literal[][][] shifts, int limit) {
+    solutionCount = 0;
+    this.allNurses = allNurses;
+    this.allDays = allDays;
+    this.allShifts = allShifts;
+    this.shifts = shifts;
+    solutionLimit = limit;
+  }
+
+  @Override
+  public void onSolutionCallback() {
+    System.out.printf("Solution #%d:%n", solutionCount);
+    for (int d : allDays) {
+      System.out.printf("Day %d%n", d);
+      for (int n : allNurses) {
+        boolean isWorking = false;
+        for (int s : allShifts) {
+          if (booleanValue(shifts[n][d][s])) {
+            isWorking = true;
+            System.out.printf("  Nurse %d work shift %d%n", n, s);
+          }
+        }
+        if (!isWorking) {
+          System.out.printf("  Nurse %d does not work%n", n);
+        }
+      }
+    }
+    solutionCount++;
+    if (solutionCount >= solutionLimit) {
+      System.out.printf("Stop search after %d solutions%n", solutionLimit);
+      stopSearch();
+    }
+  }
+
+  public int getSolutionCount() {
+    return solutionCount;
+  }
+
+  private int solutionCount;
+  private final int[] allNurses;
+  private final int[] allDays;
+  private final int[] allShifts;
+  private final Literal[][][] shifts;
+  private final int solutionLimit;
+}
+
+VarArraySolutionPrinterWithLimit cb =
+    new VarArraySolutionPrinterWithLimit(allNurses, allDays, allShifts, shifts, solutionLimit);
+
   }
 }
