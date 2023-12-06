@@ -96,5 +96,19 @@ for (int d : allDays) {
       model.addExactlyOne(nurses);
     }
   }
+
+// 2. Each nurse works at most one shift per day.
+
+for (int n : allNurses) {
+    for (int d : allDays) {
+      List<Literal> work = new ArrayList<>();
+      for (int s : allShifts) {
+        work.add(shifts[n][d][s]);
+      }
+      model.addAtMostOne(work);
+    }
+  }
+
+
   }
 }
