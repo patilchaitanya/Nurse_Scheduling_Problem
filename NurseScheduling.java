@@ -152,6 +152,7 @@ class VarArraySolutionPrinterWithLimit extends CpSolverSolutionCallback {
     solutionLimit = limit;
   }
 
+  // callback function
   @Override
   public void onSolutionCallback() {
     System.out.printf("Solution #%d:%n", solutionCount);
@@ -191,6 +192,11 @@ class VarArraySolutionPrinterWithLimit extends CpSolverSolutionCallback {
 
 VarArraySolutionPrinterWithLimit cb =
     new VarArraySolutionPrinterWithLimit(allNurses, allDays, allShifts, shifts, solutionLimit);
+
+// Invoke solver
+CpSolverStatus status = solver.solve(model, cb);
+System.out.println("Status: " + status);
+System.out.println(cb.getSolutionCount() + " solutions found.");
 
   }
 }
