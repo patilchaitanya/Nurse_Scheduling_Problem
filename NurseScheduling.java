@@ -109,6 +109,31 @@ for (int n : allNurses) {
     }
   }
 
+// 3. Assign shifts evenly
+
+/* Since there are nine shifts over the three-day period, we can assign two shifts to each of the four nurses. After that there will be one shift left over, which can be assigned to any nurse. */
+
+// Try to distribute the shifts evenly, so that each nurse works
+// minShiftsPerNurse shifts. If this is not possible, because the total
+// number of shifts is not divisible by the number of nurses, some nurses will
+// be assigned one more shift.
+int minShiftsPerNurse = (numShifts * numDays) / numNurses;
+int maxShiftsPerNurse;
+if ((numShifts * numDays) % numNurses == 0) {
+  maxShiftsPerNurse = minShiftsPerNurse;
+} else {
+  maxShiftsPerNurse = minShiftsPerNurse + 1;
+}
+for (int n : allNurses) {
+  LinearExprBuilder shiftsWorked = LinearExpr.newBuilder();
+  for (int d : allDays) {
+    for (int s : allShifts) {
+      shiftsWorked.add(shifts[n][d][s]);
+    }
+  }
+  model.addLinearConstraint(shiftsWorked, minShiftsPerNurse, maxShiftsPerNurse);
+}
+
 
   }
 }
