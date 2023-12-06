@@ -13,6 +13,8 @@ import java.util.stream.IntStream;
 public class NurseScheduling {
   public static void main(String[] args) {
     Loader.loadNativeLibraries();
+
+// Data 
 final int numNurses = 5;
 final int numDays = 7;
 final int numShifts = 3;
@@ -73,6 +75,7 @@ final int[][][] shiftRequests = new int[][][] {
 
 CpModel model = new CpModel();
 
+// Array : possible combos of shifts to store if nurse works on that day and shift
 Literal[][][] shifts = new Literal[numNurses][numDays][numShifts];
 for (int n : allNurses) {
   for (int d : allDays) {
@@ -81,6 +84,17 @@ for (int n : allNurses) {
     }
   }
 }
-#
+
+// Constraints
+// 1. Each shift is assigned to a single nurse per day. 
+for (int d : allDays) {
+    for (int s : allShifts) {
+      List<Literal> nurses = new ArrayList<>();
+      for (int n : allNurses) {
+        nurses.add(shifts[n][d][s]);
+      }
+      model.addExactlyOne(nurses);
+    }
+  }
   }
 }
