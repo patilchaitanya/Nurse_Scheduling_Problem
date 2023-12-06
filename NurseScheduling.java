@@ -134,6 +134,11 @@ for (int n : allNurses) {
   model.addLinearConstraint(shiftsWorked, minShiftsPerNurse, maxShiftsPerNurse);
 }
 
+// Give all possible solutions
+CpSolver solver = new CpSolver();
+solver.getParameters().setLinearizationLevel(0);
+// Tell the solver to enumerate all solutions.
+solver.getParameters().setEnumerateAllSolutions(true);
 
   }
 }
